@@ -9,8 +9,8 @@ import urllib
 class imdb(CrawlSpider):
     name = 'imdb'
     start_urls = ['https://www.imdb.com/search/title?year=2018-01-01,2018-12-31&start=1']
-    for i in range(1, 5332):
-        start_urls.append("https://www.imdb.com/search/title?year=2018-01-01,2018-12-31&start=" + str(i * 50 + 1))
+    # for i in range(1, 5332):
+    #     start_urls.append("https://www.imdb.com/search/title?year=2018-01-01,2018-12-31&start=" + str(i * 50 + 1))
     url = 'https://www.imdb.com'
 
     def parse(self, response):
@@ -35,8 +35,13 @@ class imdb(CrawlSpider):
             gross = "".join(gross).strip().split(",")
             gross = "".join(gross)
 
-            # actor = Field()
-            # serial = Field()
+            actor_result = []
+            actors = movie.xpath('div[contains(@class,"lister-item-content")]/p[3]/a')
+            for actor in actors:
+                actor_result.append(actor.xpath('text()').extract()[0])
+
+            serial_address = movie.xpath('div/h3/a/@href').extract()[0]
+            serial_address = serial_address.split("/")
             item['title'] = title
             item['certificate'] = certificate
             item['run_time'] = run_time
@@ -45,6 +50,9 @@ class imdb(CrawlSpider):
             item['rating'] = rating
             item['rating_count'] = rating_count
             item['gross'] = gross
+            item['actor'] = ",".join(actor_result)
+            item['serial'] = serial_address[2]
+
 
 
 
