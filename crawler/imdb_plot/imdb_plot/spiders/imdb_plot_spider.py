@@ -5,7 +5,7 @@ from scrapy.selector import Selector
 from scrapy.http import Request
 from imdb_plot.items import ImdbPlotItem
 import urllib
-from sqlalchemy import Column, ForeignKey, Integer, String, Float, BIGINT, Text
+from sqlalchemy import Column, Integer, String, Float, BIGINT, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

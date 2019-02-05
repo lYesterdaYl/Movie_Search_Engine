@@ -12,5 +12,4 @@ class ImdbPlotItem(Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
     summary = Field()
-    synopsis = Field()
     movie_id = Field()
