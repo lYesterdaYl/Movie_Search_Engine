@@ -51,7 +51,7 @@ class ImdbPipeline(object):
 
 
     def process_item(self, item, spider):
-        movie = self.session.query(IMDB_Movie_Info).filter_by(serial=item['serial']).first()
+        movie = self.session.query(IMDB_Movie_Info.id).filter_by(serial=item['serial']).first()
         if movie is None:
             self.session.add(IMDB_Movie_Info(**item))
             self.session.commit()
