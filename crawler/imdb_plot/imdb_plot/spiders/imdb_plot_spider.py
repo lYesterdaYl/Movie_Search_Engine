@@ -48,10 +48,9 @@ class imdb_plot(CrawlSpider):
     start_urls = []
 
     movie_info = {}
-    for i in range(2018, 2019):
+    for i in range(1950, 1950+1):
         movie_serials = session.query(IMDB_Movie_Info.serial, IMDB_Movie_Info.id).filter_by(year=str(i))
         for serial in movie_serials:
-            print(str(serial.serial))
             movie_info[serial.serial] = serial.id
             start_urls.append("https://www.imdb.com/title/" + str(serial.serial) + "/plotsummary")
     url = 'https://www.imdb.com'
@@ -74,5 +73,5 @@ class imdb_plot(CrawlSpider):
 
 
 
-
-            yield item
+            if "It looks like we don't have any Plot Summaries for this title yet." not in summary:
+                yield item
