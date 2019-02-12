@@ -2,6 +2,10 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_structure import IMDB_Movie_Summary, IMDB_Movie_Info
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import PorterStemmer
+
 
 Base = declarative_base()
 
@@ -28,6 +32,21 @@ class Analyzer:
         summary_data = self.session.query(IMDB_Movie_Summary.summary).join(IMDB_Movie_Info, IMDB_Movie_Summary.movie_id==IMDB_Movie_Info.id).filter(IMDB_Movie_Info.year>self.year[0], IMDB_Movie_Info.year<self.year[1])
 
         return summary_data
+
+    def stop_word(self, str):
+        result = {}
+        stopWords = set(stopwords.words('english'))
+        for word in word_tokenize(str):
+            if word not in stopWords:
+                result.append(word)
+        return  "".join(result)
+
+    def stemming(self, str):
+        result = []
+        ps = PorterStemmer()
+        for word in word_tokenize(str):
+            result.append(ps.stem(word))
+        return result
 
     def analyze(self):
         pass
