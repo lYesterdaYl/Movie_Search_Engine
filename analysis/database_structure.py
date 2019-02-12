@@ -2,6 +2,8 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, Float, BIGINT, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy import create_engine
+
 
 
 Base = declarative_base()
@@ -40,3 +42,17 @@ class IMDB_Index_Data(Base):
     id = Column(Integer, primary_key=True)
     word = Column(String(50))
     document_id = Column(Text)
+
+
+DIALCT = "mysql"
+DRIVER = "pymysql"
+USERNAME = "root"
+PASSWORD = ""
+HOST = "127.0.0.1"
+PORT = "3306"
+DATABASE = "imdb"
+DB_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8" \
+    .format(DIALCT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
+engine = create_engine(DB_URI)
+Base.metadata.create_all(engine)
+
