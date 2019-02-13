@@ -1,5 +1,6 @@
 
 from sqlalchemy import Column, ForeignKey, Integer, String, Float, BIGINT, Text
+from sqlalchemy.dialects.mysql import LONGTEXT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -41,7 +42,7 @@ class IMDB_Index_Data(Base):
 
     id = Column(Integer, primary_key=True)
     word = Column(String(50))
-    document_id = Column(Text)
+    document_id = Column(LONGTEXT)
 
 
 DIALCT = "mysql"
