@@ -69,8 +69,8 @@ class Analyzer:
         n = 1
         for word, tf in data.items():
             stop = timeit.default_timer()
-            print("Update-Database-Progress: ", round(n/total*100, 3), "%", "   Used Time: ", round(stop - start, 3), "   Estimate Remain Time: ", round(100/round(n/total*100, 3)*round(stop-start, 3) - round(stop - start, 3), 3), " seconds")
-            word_data = self.session.query(IMDB_Index_Data.document_id).filter_by(word=word).first()
+            print("Update-Database-Progress: ", round(n/total*100, 2), "%", "   Used Time: ", round(stop - start, 2), "   Estimate Remain Time: ", round(100/round(n/total*100, 3)*round(stop-start, 3) - round(stop - start, 3), 2), " seconds")
+            word_data = self.session.query(IMDB_Index_Data).filter_by(word=word).first()
             if word_data is None:
                 tf = dict(sorted(tf.items(), key=itemgetter(1), reverse=True))
                 self.session.add(IMDB_Index_Data(word=word, document_id=json.dumps(tf)))
@@ -79,7 +79,7 @@ class Analyzer:
                 word_data.document_id = json.dumps(dict(sorted(word_data.document_id.items(), key=itemgetter(1), reverse=True)))
                 self.session.add(word_data)
             n += 1
-            self.session.commit()
+        self.session.commit()
 
 
     def analyze(self):
@@ -91,9 +91,9 @@ class Analyzer:
         n = 1
         for data in datas:
             stop = timeit.default_timer()
-            print("Pre-Processing-Progress: ", round(n / total * 100, 3), "%", "   Used Time: ", round(stop - start, 3),
+            print("Pre-Processing-Progress: ", round(n / total * 100, 2), "%", "   Used Time: ", round(stop - start, 2),
                   "   Estimate Remain Time: ",
-                  round(100 / round(n / total * 100, 3) * round(stop - start, 3) - round(stop - start, 3), 3),
+                  round(100 / round(n / total * 100, 3) * round(stop - start, 3) - round(stop - start, 3), 2),
                   " seconds")
             sw = self.stop_word(data.summary)
             st = self.stemming(sw)
@@ -128,7 +128,7 @@ class Analyzer:
                 if data.id not in result[key]:
                     result[key][data.id] = value
             n += 1
-        # self.update_database(result)
+        self.update_database(result)
 
 if __name__ == '__main__':
     analyzer = Analyzer()
