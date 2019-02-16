@@ -29,6 +29,7 @@ class Analyzer:
         sess = sessionmaker(bind=engine)
         self.session = sess()
         self.year = [1950, 2019]
+        self.ignore_set = {',', '.', ':', '?', "'", "(", ")", "-", '_', '/', '|'}
 
     def get_movie_data(self):
         summary_data = self.session\
@@ -57,10 +58,11 @@ class Analyzer:
     def process_with_tf(self, str):
         result = {}
         for word in word_tokenize(str):
-            if word not in result:
-                result[word] = 1
-            elif word in result:
-                result[word] += 1
+            if word not in self.ignore_set:
+                if word not in result:
+                    result[word] = 1
+                elif word in result:
+                    result[word] += 1
         return result
 
     def update_database(self, data: {}):
@@ -128,6 +130,7 @@ class Analyzer:
                 if data.id not in result[key]:
                     result[key][data.id] = value
             n += 1
+
         self.update_database(result)
 
 if __name__ == '__main__':
