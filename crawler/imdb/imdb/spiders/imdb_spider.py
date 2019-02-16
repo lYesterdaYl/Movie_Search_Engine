@@ -11,8 +11,8 @@ class imdb(CrawlSpider):
     start_urls = ['https://www.imdb.com/search/title?year=2018-01-01,2018-12-31&start=1']
 
     for i in range(1986, 2018):
-        for j in range(1, 199):
-            start_urls.append("https://www.imdb.com/search/title?year=" + str(i) + "," + str(i) + "&start=" + str(j * 50 + 1))
+        for j in range(0, 99):
+            start_urls.append("https://www.imdb.com/search/title?year=" + str(i) + "," + str(i) + "&sort=num_votes,desc&start=" + str(j * 50 + 1))
     url = 'https://www.imdb.com'
 
     def parse(self, response):
