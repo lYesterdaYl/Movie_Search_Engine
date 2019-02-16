@@ -44,6 +44,12 @@ class IMDB_Index_Data(Base):
     word = Column(String(50))
     document_id = Column(LONGTEXT)
 
+class IMDB_Index_Data_2(Base):
+    __tablename__ = 'imdb_movie_index_2'
+
+    id = Column(Integer, primary_key=True)
+    word = Column(String(50))
+    document_id = Column(LONGTEXT)
 
 DIALCT = "mysql"
 DRIVER = "pymysql"
