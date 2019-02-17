@@ -36,7 +36,7 @@ class imdb_plot(CrawlSpider):
     PASSWORD = ""
     HOST = "127.0.0.1"
     PORT = "3306"
-    DATABASE = "imdb"
+    DATABASE = "imdb_test"
     DB_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8" \
         .format(DIALCT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
     engine = create_engine(DB_URI)
@@ -49,7 +49,7 @@ class imdb_plot(CrawlSpider):
 
     movie_info = {}
     for i in range(1950, 1950+1):
-        movie_serials = session.query(IMDB_Movie_Info.serial, IMDB_Movie_Info.id).filter_by(year=str(i))
+        movie_serials = session.query(IMDB_Movie_Info.serial, IMDB_Movie_Info.id).filter(IMDB_Movie_Info.year.like("%" + str(i) + "%")).all()
         for serial in movie_serials:
             movie_info[serial.serial] = serial.id
             start_urls.append("https://www.imdb.com/title/" + str(serial.serial) + "/plotsummary")
@@ -64,7 +64,8 @@ class imdb_plot(CrawlSpider):
         print("url is", url)
         for su in summaries:
             summary = su.xpath('p/text()').extract()
-            summary = "".join(summary)
+            summary = " ".join(summary).strip().split(" ")
+            summary = " ".join(summary)
 
 
 
