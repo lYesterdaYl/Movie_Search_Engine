@@ -74,5 +74,7 @@ class imdb_plot(CrawlSpider):
 
 
 
-            if "It looks like we don't have any Plot Summaries for this title yet." not in summary:
-                yield item
+            if "It looks like we don't have any Plot Summaries for this title yet." in summary:
+                item['summary'] = ""
+
+            yield item

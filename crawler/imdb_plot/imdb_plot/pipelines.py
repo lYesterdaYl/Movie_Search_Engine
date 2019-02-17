@@ -50,7 +50,7 @@ class ImdbPlotPipeline(object):
         PASSWORD = ""
         HOST = "127.0.0.1"
         PORT = "3306"
-        DATABASE = "imdb"
+        DATABASE = "imdb_test"
         DB_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8" \
             .format(DIALCT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
         self.engine = create_engine(DB_URI)
