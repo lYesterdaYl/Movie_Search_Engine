@@ -37,7 +37,7 @@ class Analyzer:
             .query(IMDB_Movie_Summary.summary, IMDB_Movie_Info.id, IMDB_Movie_Info.title
                    , IMDB_Movie_Info.actor, IMDB_Movie_Info.genre, IMDB_Movie_Info.year)\
             .join(IMDB_Movie_Info, IMDB_Movie_Summary.movie_id == IMDB_Movie_Info.id)\
-            .filter(IMDB_Movie_Info.year >= self.year[0], IMDB_Movie_Info.year <= self.year[1])
+            # .filter(IMDB_Movie_Info.year >= self.year[0], IMDB_Movie_Info.year <= self.year[1])
 
         return summary_data
 
@@ -189,7 +189,7 @@ class Analyzer:
             print(key, value, " seconds")
 if __name__ == '__main__':
     analyzer = Analyzer()
-    analyzer.year = [1981, 2018]
+    analyzer.year = [1951, 2018]
     analyzer.analyze()
     analyzer.print_timer()
 
