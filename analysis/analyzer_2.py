@@ -21,7 +21,7 @@ class Analyzer:
         PASSWORD = ""
         HOST = "127.0.0.1"
         PORT = "3306"
-        DATABASE = "imdb_test"
+        DATABASE = "imdb_test_2"
         DB_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8" \
             .format(DIALCT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
         engine = create_engine(DB_URI)
@@ -55,6 +55,19 @@ class Analyzer:
         for word in word_tokenize(str):
             result.append(ps.stem(word))
         return " ".join(result)
+
+    def symbol_processing(self, str):
+        result = []
+        for word in str.split(" "):
+            result.append(word)
+            for symbol in self.ignore_set:
+                if symbol in word:
+                    sub_word = word.split(symbol)
+                    for sub_str in sub_word:
+                        result.append(sub_str)
+                    result.append("".join(sub_word))
+        return " ".join(result)
+
 
     def process_with_tf(self, str):
         result = {}
@@ -112,10 +125,6 @@ class Analyzer:
         total = len(index)
         n = 1
         for word, document_id in index.items():
-            # word_data = self.session.query(IMDB_Index_Data).filter_by(word=word).first()
-            # word_data.document_id = json.dumps(document_id)
-            # self.session.add(word_data)
-
             word_data = IMDB_Index_Data_2(word=word, document_id=json.dumps(document_id))
             self.session.add(word_data)
 
@@ -143,23 +152,28 @@ class Analyzer:
         for data in datas:
             sw = self.stop_word(data.summary)
             st = self.stemming(sw)
-            summary_dict = self.process_with_tf(st)
+            sp = self.symbol_processing(st)
+            summary_dict = self.process_with_tf(sp)
 
             sw = self.stop_word(data.title)
             st = self.stemming(sw)
-            title_dict = self.process_with_tf(st)
+            sp = self.symbol_processing(st)
+            title_dict = self.process_with_tf(sp)
 
             sw = self.stop_word(data.genre)
             st = self.stemming(sw)
-            genre_dict = self.process_with_tf(st)
+            sp = self.symbol_processing(st)
+            genre_dict = self.process_with_tf(sp)
 
             sw = self.stop_word(data.year)
             st = self.stemming(sw)
-            year_dict = self.process_with_tf(st)
+            sp = self.symbol_processing(st)
+            year_dict = self.process_with_tf(sp)
 
             sw = self.stop_word(data.actor)
             st = self.stemming(sw)
-            actor_dict = self.process_with_tf(st)
+            sp = self.symbol_processing(st)
+            actor_dict = self.process_with_tf(sp)
 
             movie_info_dict = dict(Counter(title_dict) + Counter(genre_dict) + Counter(year_dict) + Counter(actor_dict))
             for item in movie_info_dict:
