@@ -19,7 +19,7 @@ USERNAME = "root"
 PASSWORD = ""
 HOST = "127.0.0.1"
 PORT = "3306"
-DATABASE = "imdb_test"
+DATABASE = "imdb_test_2"
 DB_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8"\
     .format(DIALCT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
 engine = create_engine(DB_URI)
@@ -70,6 +70,42 @@ def index():
     # else:
     #     return render_template('index.html')
 
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
+def query():
+    if request.method == 'POST':
+        analyzer = Analyzer()
+        search_query = request.form['query']
+        stop_word = analyzer.stop_word(search_query)
+        stem = analyzer.stemming(stop_word)
+
+        result = Counter({})
+        for word in set(stem.split(" ")):
+            word = session.query(IMDB_Index_Data).filter_by(word=word).first()
+            result += result + Counter(json.loads(word.document_id))
+
+        result = dict(sorted(result.items(), key=itemgetter(1), reverse=True))
+        s = ""
+
+        n = 0
+        for movie_id, tf in result.items():
+            if n < 10:
+                movie_info = session.query(IMDB_Movie_Info.title, IMDB_Movie_Info.year).filter_by(id=movie_id).first()
+                s += "Title: " + str(movie_info.title) + " "
+                s += "Year: " + str(movie_info.year) + " "
+                # s += "Certificate: " + str(movie_info.certificate) + " "
+                # s += "Run Time: " + str(movie_info.run_time) + " "
+                # s += "Genre: " + str(movie_info.genre) + " "
+                # s += "Rating: " + str(movie_info.rating) + " "
+                # s += "Rating Count: " + str(movie_info.rating_count) + " "
+                # s += "gross: " + str(movie_info.gross) + " "
+                # s += "Actor: " + str(movie_info.actor) + " "
+                s += "\n\n"
+                n += 1
+            else:
+                break
+
+        return s
 
 if __name__ == '__main__':
     app.secret_key = "secret_key"

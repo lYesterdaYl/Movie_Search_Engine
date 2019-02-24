@@ -57,7 +57,7 @@ USERNAME = "root"
 PASSWORD = ""
 HOST = "127.0.0.1"
 PORT = "3306"
-DATABASE = "imdb_test"
+DATABASE = "imdb_test_2"
 DB_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8" \
     .format(DIALCT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
 engine = create_engine(DB_URI)
