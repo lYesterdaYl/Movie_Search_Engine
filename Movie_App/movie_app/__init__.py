@@ -42,7 +42,8 @@ def index():
         result = Counter({})
         for word in set(stem.split(" ")):
             word = session.query(IMDB_Index_Data).filter_by(word=word).first()
-            result += result + Counter(json.loads(word.document_id))
+            if word is not None:
+                result += result + Counter(json.loads(word.document_id))
 
         result = dict(sorted(result.items(), key=itemgetter(1), reverse=True))
         s = ""
@@ -60,7 +61,7 @@ def index():
                 # s += "Rating Count: " + str(movie_info.rating_count) + " "
                 # s += "gross: " + str(movie_info.gross) + " "
                 # s += "Actor: " + str(movie_info.actor) + " "
-                s += "\n\n"
+                s += "<br><br>"
                 n += 1
             else:
                 break
@@ -68,8 +69,8 @@ def index():
         return s
         # return redirect(url_for('index'))
     else:
-        return "OK"
-    #     return render_template('index.html')
+        # return "OK"
+        return render_template('index.html')
 
 # @app.route('/', methods=['GET', 'POST'])
 # @app.route('/index', methods=['GET', 'POST'])

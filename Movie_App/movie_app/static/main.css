@@ -1,0 +1,15 @@
+.container {
+	position: relative;
+    text-align: center;
+    margin-top: 20%;
+    display: block;
+}
+.textbox {
+	width: 20em;
+	height: 2em;
+    margin: 1.5em;
+}
+.go_btn{
+	width: 8em;
+	height: 2em;
+}
