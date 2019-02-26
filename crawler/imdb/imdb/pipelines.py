@@ -37,7 +37,7 @@ class ImdbPipeline(object):
         DIALCT = "mysql"
         DRIVER = "pymysql"
         USERNAME = "root"
-        PASSWORD = ""
+        PASSWORD = "root"
         HOST = "127.0.0.1"
         PORT = "3306"
         DATABASE = "imdb"
