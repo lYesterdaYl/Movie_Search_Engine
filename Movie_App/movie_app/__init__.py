@@ -7,6 +7,8 @@ import json
 from analysis.analyzer_2 import Analyzer
 from collections import Counter
 from operator import itemgetter
+from collections import OrderedDict
+
 
 app = Flask(__name__)
 
@@ -19,7 +21,7 @@ USERNAME = "root"
 PASSWORD = "root"
 HOST = "127.0.0.1"
 PORT = "3306"
-DATABASE = "imdb_test_2"
+DATABASE = "imdb_test_3"
 DB_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8"\
     .format(DIALCT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
 engine = create_engine(DB_URI)
@@ -45,7 +47,7 @@ def index():
             if word is not None:
                 result += result + Counter(json.loads(word.document_id))
 
-        result = dict(sorted(result.items(), key=itemgetter(1), reverse=True))
+        result = OrderedDict(sorted(result.items(), key=lambda d: d[1], reverse=True))
         s = ""
 
         n = 0
