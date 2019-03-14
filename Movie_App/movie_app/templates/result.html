@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Search Engine</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+</head>
+<body>
+<div class="container">
+    <span>Result</span><br>
+    {% for serial, title in result.items() %}
+    <a href="https://www.imdb.com/title/{{serial}}">{{title}}</a><br>
+    {% endfor %}
+</div>
+</body>
+</html>

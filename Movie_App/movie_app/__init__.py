@@ -51,9 +51,10 @@ def index():
         s = ""
 
         n = 0
+        r = {}
         for movie_id, tf in result.items():
             if n < 10:
-                movie_info = session.query(IMDB_Movie_Info.title, IMDB_Movie_Info.year).filter_by(id=movie_id).first()
+                movie_info = session.query(IMDB_Movie_Info.title, IMDB_Movie_Info.year, IMDB_Movie_Info.serial).filter_by(id=movie_id).first()
                 s += "Title: " + str(movie_info.title) + " "
                 s += "Year: " + str(movie_info.year) + " "
                 # s += "Certificate: " + str(movie_info.certificate) + " "
@@ -65,11 +66,12 @@ def index():
                 # s += "Actor: " + str(movie_info.actor) + " "
                 s += "<br><br>"
                 n += 1
+                r[movie_info.serial] = str(movie_info.title)
             else:
                 break
 
-        return s
-        # return redirect(url_for('index'))
+        # return s
+        return render_template('result.html', result=r)
     else:
         # return "OK"
         return render_template('index.html')
@@ -119,7 +121,12 @@ def search():
     else:
         return render_template('search.html')
 
-
+@app.route('/result', methods=['GET', 'POST'])
+def result(result, query):
+    if request.method == 'POST':
+        pass
+    else:
+        return redirect("/index")
 if __name__ == '__main__':
     app.secret_key = "secret_key"
     app.debug = True
