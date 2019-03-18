@@ -54,7 +54,8 @@ def index():
         r = {}
         for movie_id, tf in result.items():
             if n < 10:
-                movie_info = session.query(IMDB_Movie_Info.title, IMDB_Movie_Info.year, IMDB_Movie_Info.serial).filter_by(id=movie_id).first()
+                # movie_info = session.query(IMDB_Movie_Info.title, IMDB_Movie_Info.year, IMDB_Movie_Info.serial).filter_by(id=movie_id).first()
+                movie_info = session.query(IMDB_Movie_Info).filter_by(id=movie_id).first()
                 s += "Title: " + str(movie_info.title) + " "
                 s += "Year: " + str(movie_info.year) + " "
                 # s += "Certificate: " + str(movie_info.certificate) + " "
@@ -65,8 +66,21 @@ def index():
                 # s += "gross: " + str(movie_info.gross) + " "
                 # s += "Actor: " + str(movie_info.actor) + " "
                 s += "<br><br>"
+                # r[movie_info.serial] = str(movie_info.title)
+                r[n] = {}
+                r[n]['title'] = movie_info.title
+                r[n]['year'] = movie_info.year
+                r[n]['certificate'] = movie_info.certificate
+                r[n]['run_time'] = movie_info.run_time
+                r[n]['genre'] = movie_info.genre
+                r[n]['rating'] = movie_info.rating
+                r[n]['rating_count'] = movie_info.rating_count
+                r[n]['gross'] = movie_info.gross
+                r[n]['actor'] = movie_info.actor
+                r[n]['serial'] = movie_info.serial
+
                 n += 1
-                r[movie_info.serial] = str(movie_info.title)
+
             else:
                 break
 

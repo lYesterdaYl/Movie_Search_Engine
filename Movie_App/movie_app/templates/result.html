@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Movie Search Engine</title>
-    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='main.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='result.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
@@ -12,8 +12,25 @@
 <body>
 <div class="container">
     <span>Result</span><br>
-    {% for serial, title in result.items() %}
-    <a href="https://www.imdb.com/title/{{serial}}">{{title}}</a><br>
+
+    {% for key, movie in result.items() %}
+    <div class="movie_result">
+        <a href="https://www.imdb.com/title/{{movie['serial']}}">{{movie['title']}}</a><br>
+        <div class="movie_info">
+            <div class="movie_info_basic">
+                <span>{{movie['year']}}</span>
+                <span>{{movie['certificate']}}</span>
+                <span>{{movie['run_time']}}</span>
+                <span>{{movie['genre']}}</span>
+            </div>
+
+            <div class="movie_info_rating">
+                <span>Rating: {{movie['rating']}}</span>
+                <span>Rating Count: {{movie['rating_count']}}</span>
+            </div>
+            <br>
+        </div>
+    </div>
     {% endfor %}
 </div>
 </body>
