@@ -4,7 +4,7 @@ from sqlalchemy.dialects.mysql import LONGTEXT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
-
+import setting
 
 
 Base = declarative_base()
@@ -66,15 +66,7 @@ class IMDB_Info_Index_Data(Base):
     word = Column(String(50))
     document_id = Column(LONGTEXT)
 
-DIALCT = "mysql"
-DRIVER = "pymysql"
-USERNAME = "root"
-PASSWORD = "root"
-HOST = "127.0.0.1"
-PORT = "3306"
-DATABASE = "imdb_test_2"
-DB_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8" \
-    .format(DIALCT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
-engine = create_engine(DB_URI)
+
+engine = create_engine(setting.DB_URI)
 Base.metadata.create_all(engine)
 

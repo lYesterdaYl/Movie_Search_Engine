@@ -9,22 +9,13 @@ import json
 from collections import Counter
 from operator import itemgetter
 import timeit
-
+import setting
 Base = declarative_base()
 
 class Analyzer:
 
     def __init__(self):
-        DIALCT = "mysql"
-        DRIVER = "pymysql"
-        USERNAME = "root"
-        PASSWORD = "root"
-        HOST = "127.0.0.1"
-        PORT = "3306"
-        DATABASE = "imdb_test_3"
-        DB_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8" \
-            .format(DIALCT, DRIVER, USERNAME, PASSWORD, HOST, PORT, DATABASE)
-        engine = create_engine(DB_URI)
+        engine = create_engine(setting.DB_URI)
         Base.metadata.create_all(engine)
         sess = sessionmaker(bind=engine)
         self.session = sess()
