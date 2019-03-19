@@ -122,7 +122,12 @@ def search():
 
 
                 if movie_info.run_time != "":
-                    if float(movie_info.run_time.split(" ")[0]) > 80:
+                    run_time = movie_info.run_time.split(" ")
+                    run_time = run_time[0].split(",")
+                    run_time = "".join(run_time)
+                    # if float(movie_info.run_time.split(" ")[0]) > 80:
+                    if float(run_time) > 80:
+
                         r[n] = {}
                         r[n]['title'] = movie_info.title
                         r[n]['year'] = movie_info.year
