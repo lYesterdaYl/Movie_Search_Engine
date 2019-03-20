@@ -11,22 +11,37 @@
 </head>
 <body>
 <div class="container">
-    <span>Result</span><br>
+    <div class="search_container">
+        <form name="search" action="{{url_for('search')}}" method="post">
+            <input name="query" type="text" value="{{ query }}">
+            <input type="submit" name="submit" class="go_btn" value="Search">
+        </form>
+    </div>
 
+    {% if correct != ""  %}
+        <div class="suggestion">
+            <span>Do you mean: </span>
+            <form id="my_form" action="{{url_for('search')}}" method = 'POST'>
+                        <input type='text' size='30' name='query' value="{{correct}}" style="display: none">
+                        <a href="javascript:{}" onclick="document.getElementById('my_form').submit();">{{correct}}</a>
+            </form>
+        </div>
+
+    {% endif %}
+    <span>Result</span><br>
     {% for key, movie in result.items() %}
     <div class="movie_result">
         <a href="https://www.imdb.com/title/{{movie['serial']}}">{{movie['title']}}</a><br>
         <div class="movie_info">
             <div class="movie_info_basic">
-                <span>{{movie['year']}}</span>
-                <span>{{movie['certificate']}}</span>
-                <span>{{movie['run_time']}}</span>
+                <span>{{movie['year']}}</span>|
+                <span>{{movie['certificate']}}</span>|
+                <span>{{movie['run_time']}}</span>|
                 <span>{{movie['genre']}}</span>
             </div>
 
             <div>
                 <span>Actor: {{movie['actor']}}</span>
-
             </div>
             <div class="movie_info_rating">
                 <span>Rating: {{movie['rating']}}</span>
@@ -35,7 +50,7 @@
 
             <div>
                 <span>Term Frequency: {{movie['tf']}}</span>
-                <span>Rank: {{movie['rank']}}</span>
+                <span>Ranking Value: {{movie['rank']}}</span>
 
             </div>
             <br>
