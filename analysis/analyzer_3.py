@@ -139,6 +139,17 @@ class Analyzer:
         stop = timeit.default_timer()
         self.timer[t +'-Total: '] = round(stop - start, 2)
 
+    def convert_genre(self, genre):
+        if genre == "Sci-Fi":
+            return "Science Fiction"
+        elif genre == "Game-Show":
+            return "Game Show"
+        elif genre == "Talk-Show":
+            return "Talk Show"
+        elif genre == "Reality-TV":
+            return "Reality TV"
+        else:
+            return genre
 
     def analyze(self):
         summary = {}
@@ -159,7 +170,8 @@ class Analyzer:
             sp = self.symbol_processing(st)
             title_dict = self.process_with_tf(sp)
 
-            sw = self.stop_word(data.genre)
+            genre = self.convert_genre(data.genre)
+            sw = self.stop_word(genre)
             st = self.stemming(sw)
             sp = self.symbol_processing(st)
             genre_dict = self.process_with_tf(sp)
