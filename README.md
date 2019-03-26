@@ -30,3 +30,7 @@ to IMDB website for detail information of the movie.
 * [Flask SqlAlchemy](http://flask-sqlalchemy.pocoo.org/2.3/) - Used to retrieve data from database.
 * [Scrapy](https://scrapy.org/) - Used to crawl data from IMDB.
 
+## Posible Future Update
+1. Apply synonym to contents to deal with different keywords but meaning the same thing.
+2. Keep track of which result user clicked and put that into ranking consideration.
+3. calculate the match percentage with the keyword and add it into ranking consideration.
