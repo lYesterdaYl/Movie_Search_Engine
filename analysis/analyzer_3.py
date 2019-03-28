@@ -73,23 +73,6 @@ class Analyzer:
     def update_database(self, data: {}, data_type):
         index = {}
 
-        # words = self.session.query(IMDB_Index_Data)
-        # start = timeit.default_timer()
-        # total = words.count()
-        # n = 1
-        #
-        # for word in words:
-        #     index[word.word] = json.loads(word.document_id)
-        #
-        #     stop = timeit.default_timer()
-        #     print("Initialize-Index-Progress: ", round(n / total * 100, 2), "%", "   Used Time: ",
-        #           round(stop - start, 2), "   Estimate Remain Time: ",
-        #           round(100 / (n / total * 100) * (stop - start) - (stop - start), 2),
-        #           " seconds")
-        #     self.timer['Initialize-Index: '] = round(stop - start, 2)
-        #
-        #     n += 1
-
         start = timeit.default_timer()
         total = len(data)
         n = 1
@@ -140,16 +123,20 @@ class Analyzer:
         self.timer[t +'-Total: '] = round(stop - start, 2)
 
     def convert_genre(self, genre):
-        if genre == "Sci-Fi":
-            return "Science Fiction"
-        elif genre == "Game-Show":
-            return "Game Show"
-        elif genre == "Talk-Show":
-            return "Talk Show"
-        elif genre == "Reality-TV":
-            return "Reality TV"
-        else:
-            return genre
+        result = set()
+        for genre in str.split(","):
+            genre = genre.strip()
+            if genre == "Sci-Fi":
+                result.add("Science Fiction")
+            elif genre == "Game-Show":
+                result.add("Game Show")
+            elif genre == "Talk-Show":
+                result.add("Talk Show")
+            elif genre == "Reality-TV":
+                result.add("Reality TV")
+            else:
+                result.add(genre)
+        return " ".join(result)
 
     def analyze(self):
         summary = {}
