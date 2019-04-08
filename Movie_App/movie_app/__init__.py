@@ -170,7 +170,7 @@ def search():
         n = 0
         r = {}
         for movie_id, tf in result.items():
-            if len(r) < 500:
+            if len(r) < 1000:
                 # movie_info = session.query(IMDB_Movie_Info.title, IMDB_Movie_Info.year, IMDB_Movie_Info.serial).filter_by(id=movie_id).first()
                 movie_info = session.query(IMDB_Movie_Info).filter_by(id=movie_id).first()
 
@@ -242,7 +242,7 @@ def search_v2():
         n = 0
         r = {}
         for movie_id, tf in result.items():
-            if len(r) < 500:
+            if len(r) < 1000:
                 # movie_info = session.query(IMDB_Movie_Info.title, IMDB_Movie_Info.year, IMDB_Movie_Info.serial).filter_by(id=movie_id).first()
                 movie_info = session.query(IMDB_Movie_Info).filter_by(id=movie_id).first()
                 movie_info = mi[int(movie_id)]
@@ -289,11 +289,104 @@ def search_v2():
     else:
         return render_template('search_v2.html')
 
+@app.route('/search_v3', methods=['GET', 'POST'])
+def search_v3():
+    start = timeit.default_timer()
+    if request.method == 'POST':
+        analyzer = Analyzer()
+        search_query = request.form['query']
+        stop_word = analyzer.stop_word(search_query)
+        stem = analyzer.stemming(stop_word)
 
+        info_result = Counter({})
+        summary_result = Counter({})
+
+        info_match = {}
+        summary_match = {}
+        for word in set(stem.split(" ")):
+            if word in mii:
+                info_word = mii[word]
+                info_result += info_result + Counter(info_word['document_id'])
+                for movie_id in info_word['document_id'].keys():
+                    if movie_id not in info_match:
+                        info_match[movie_id] = 0
+                    else:
+                        info_match[movie_id] += 1
+
+            if word in msi:
+                summary_word = msi[word]
+                summary_result += summary_result + Counter(summary_word['document_id'])
+                for movie_id in summary_word['document_id'].keys():
+                    if movie_id not in summary_match:
+                        summary_match[movie_id] = 0
+                    else:
+                        summary_match[movie_id] += 1
+
+        info_match = OrderedDict(sorted(info_match.items(), key=lambda d: d[1], reverse=True))
+        summary_match = OrderedDict(sorted(summary_match.items(), key=lambda d: d[1], reverse=True))
+
+        result = info_result + summary_result
+        result = OrderedDict(sorted(result.items(), key=lambda d: d[1], reverse=True))
+
+        n = 0
+        r = {}
+        for movie_id, tf in result.items():
+            if len(r) < 1000:
+                # movie_info = session.query(IMDB_Movie_Info.title, IMDB_Movie_Info.year, IMDB_Movie_Info.serial).filter_by(id=movie_id).first()
+                movie_info = session.query(IMDB_Movie_Info).filter_by(id=movie_id).first()
+                movie_info = mi[int(movie_id)]
+
+
+                if movie_info['run_time'] != "":
+                    run_time = movie_info['run_time'].split(" ")
+                    run_time = run_time[0].split(",")
+                    run_time = "".join(run_time)
+                    if float(run_time) > 80:
+
+                        r[n] = {}
+                        r[n]['title'] = movie_info['title']
+                        r[n]['year'] = movie_info['year']
+                        r[n]['certificate'] = movie_info['certificate']
+                        r[n]['run_time'] = movie_info['run_time']
+                        r[n]['genre'] = movie_info['genre']
+                        r[n]['rating'] = movie_info['rating']
+                        r[n]['rating_count'] = movie_info['rating_count']
+                        r[n]['gross'] = movie_info['gross']
+                        r[n]['actor'] = movie_info['actor']
+                        r[n]['serial'] = movie_info['serial']
+                        r[n]['tf'] = tf
+                        r[n]['rank'] = n
+                        n += 1
+            else:
+                break
+        rr = OrderedDict(sorted(r.items(), key=lambda d: d[1]['rating_count'], reverse=True))
+        for i, key in enumerate(rr):
+            r[key]['rank'] += i
+
+        for i, key in enumerate(info_match):
+            if key in r:
+                r[key]['rank'] += i
+
+        for i, key in enumerate(summary_match):
+            if key in r:
+                r[key]['rank'] += i
+
+        r = OrderedDict(sorted(r.items(), key=lambda d: d[1]['rank'], reverse=False))
+
+        spell = SpellChecker()
+        query = search_query.split(" ")
+        correct = []
+        for word in query:
+            correct.append(spell.correction(word))
+        correct = " ".join(correct)
+        if correct == search_query:
+            correct = ""
+        stop = timeit.default_timer()
+        return render_template('result_v3.html', result=r, correct=correct, query=search_query, query_time=round(stop-start,2))
+    else:
+        return render_template('search_v3.html')
 
 if __name__ == '__main__':
     app.secret_key = "secret_key"
     app.debug = True
-    app.run(host='0.0.0.0', port=5000)
-
-
+    app.run(host='localhost', port=5000)
