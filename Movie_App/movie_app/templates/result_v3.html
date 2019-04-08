@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<head>
+    <meta charset="UTF-8">
+    <title>Movie Search Engine</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='result.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+</head>
+<body>
+<div class="container">
+    <div class="search_container">
+        <form name="search" action="{{url_for('search_v3')}}" method="post">
+            <input name="query" type="text" value="{{ query }}">
+            <input type="submit" name="submit" class="go_btn" value="Search">
+        </form>
+    </div>
+
+    <span>Query Time: {{ query_time }} seconds</span>
+    {% if correct != ""  %}
+        <div class="suggestion">
+            <span>Do you mean: </span>
+            <form id="my_form" action="{{url_for('search_v3')}}" method = 'POST'>
+                        <input type='text' size='30' name='query' value="{{correct}}" style="display: none">
+                        <a href="javascript:{}" onclick="document.getElementById('my_form').submit();">{{correct}}</a>
+            </form>
+        </div>
+
+    {% endif %}
+    <span>Result</span><br>
+    {% for key, movie in result.items() %}
+    <div class="movie_result">
+        <a href="https://www.imdb.com/title/{{movie['serial']}}">{{movie['title']}}</a><br>
+        <div class="movie_info">
+            <div class="movie_info_basic">
+                <span>{{movie['year']}}</span>|
+                <span>{{movie['certificate']}}</span>|
+                <span>{{movie['run_time']}}</span>|
+                <span>{{movie['genre']}}</span>
+            </div>
+
+            <div>
+                <span>Actor: {{movie['actor']}}</span>
+            </div>
+            <div class="movie_info_rating">
+                <span>Rating: {{movie['rating']}}</span>
+                <span>Rating Count: {{movie['rating_count']}}</span>
+            </div>
+
+            <div>
+                <span>Term Frequency: {{movie['tf']}}</span>
+                <span>Ranking Value: {{movie['rank']}}</span>
+
+            </div>
+            <br>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</body>
+</html>
