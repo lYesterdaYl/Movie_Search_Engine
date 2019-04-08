@@ -33,13 +33,14 @@ session = db.session
 # DBSession = sessionmaker(bind=engine)
 # session = scoped_session(DBSession)()
 
-mi= session.query(IMDB_Movie_Info)
-mii = session.query(IMDB_Info_Index_Data)
-msi = session.query(IMDB_Summary_Index_Data)
+if setting.store_data_to_memory == 1:
+    mi= session.query(IMDB_Movie_Info)
+    mii = session.query(IMDB_Info_Index_Data)
+    msi = session.query(IMDB_Summary_Index_Data)
 
-mi = movie_data_formator.movie_info_to_dict(mi)
-mii = movie_data_formator.movie_info_index_to_dict(mii)
-msi = movie_data_formator.movie_summary_index_to_dict(msi)
+    mi = movie_data_formator.movie_info_to_dict(mi)
+    mii = movie_data_formator.movie_info_index_to_dict(mii)
+    msi = movie_data_formator.movie_summary_index_to_dict(msi)
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -219,7 +220,7 @@ def search():
 @app.route('/search_v2', methods=['GET', 'POST'])
 def search_v2():
     start = timeit.default_timer()
-    if request.method == 'POST':
+    if request.method == 'POST' and setting.store_data_to_memory:
         analyzer = Analyzer()
         search_query = request.form['query']
         stop_word = analyzer.stop_word(search_query)
@@ -286,13 +287,15 @@ def search_v2():
             correct = ""
         stop = timeit.default_timer()
         return render_template('result_v2.html', result=r, correct=correct, query=search_query, query_time=round(stop-start,2))
+    elif not setting.store_data_to_memory:
+        return redirect("/search")
     else:
         return render_template('search_v2.html')
 
 @app.route('/search_v3', methods=['GET', 'POST'])
 def search_v3():
     start = timeit.default_timer()
-    if request.method == 'POST':
+    if request.method == 'POST' and setting.store_data_to_memory:
         analyzer = Analyzer()
         search_query = request.form['query']
         stop_word = analyzer.stop_word(search_query)
@@ -383,6 +386,8 @@ def search_v3():
             correct = ""
         stop = timeit.default_timer()
         return render_template('result_v3.html', result=r, correct=correct, query=search_query, query_time=round(stop-start,2))
+    elif not setting.store_data_to_memory:
+        return redirect("/search")
     else:
         return render_template('search_v3.html')
 
